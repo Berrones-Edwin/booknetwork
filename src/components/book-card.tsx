@@ -2,7 +2,8 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Star, Archive, Share2, Edit, BookOpen } from 'lucide-react';
-import type { BookResponse } from '@/lib/types';
+import type { BookResponse } from '@/api/types/types';
+
 
 interface BookCardProps {
   book: BookResponse;
@@ -45,19 +46,19 @@ export function BookCard({
           </Badge>
         )}
       </div>
-      
+
       <CardContent className="p-4 space-y-2">
         <div className="space-y-1">
           <h3 className="font-semibold text-lg line-clamp-1">{book.title}</h3>
           <p className="text-sm text-muted-foreground">{book.authorName}</p>
         </div>
-        
+
         {book.synopsis && (
           <p className="text-sm text-muted-foreground line-clamp-2">
             {book.synopsis}
           </p>
         )}
-        
+
         <div className="flex items-center gap-4 pt-2">
           {book.rate !== undefined && (
             <div className="flex items-center gap-1">
@@ -65,7 +66,7 @@ export function BookCard({
               <span className="text-sm font-medium">{book.rate.toFixed(1)}</span>
             </div>
           )}
-          
+
           <div className="flex items-center gap-2">
             {book.shareable && (
               <Badge variant="secondary" className="text-xs">
@@ -74,14 +75,14 @@ export function BookCard({
             )}
           </div>
         </div>
-        
+
         {book.owner && (
           <p className="text-xs text-muted-foreground">
             Owner: {book.owner}
           </p>
         )}
       </CardContent>
-      
+
       {showActions && (
         <CardFooter className="p-4 pt-0 flex gap-2">
           {isOwner ? (
