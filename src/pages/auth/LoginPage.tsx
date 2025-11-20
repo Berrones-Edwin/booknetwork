@@ -23,7 +23,7 @@ export default function LoginPage() {
         mutate(data, {
             onSuccess: (res) => {
                 if (res.token) {
-                    localStorage.setItem("token", JSON.stringify(res.token));
+                    localStorage.setItem("token", res.token);
 
                     router("/books", {
                         replace: true
