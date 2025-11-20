@@ -12,6 +12,15 @@ export const useFeedbackByBook = (bookId: number, page = 0, size = 10) =>
         queryKey: ["feedback", bookId, page, size],
         queryFn: () => FeedbackApi.findAllByBook(bookId, page, size),
         enabled: !!bookId,
+        initialData: {
+            content: [],
+            number: 0,
+            size: 0,
+            total: 0,
+            totalPages: 0,
+            first: true,
+            last: false
+        }
     });
 
 // -----------------------
