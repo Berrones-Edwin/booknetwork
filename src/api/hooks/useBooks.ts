@@ -10,24 +10,62 @@ export const useBooks = (page = 0, size = 10) =>
     useQuery<PageResponseBookResponse>({
         queryKey: ["books", page, size],
         queryFn: () => BooksApi.findAll(page, size),
+        initialData: {
+            content: [],
+            number: 0,
+            size: 10,
+            total: 0,
+            totalPages: 0,
+            first: true,
+            last: true,
+        }
     });
 
 export const useBooksByOwner = (page = 0, size = 10) =>
     useQuery<PageResponseBookResponse>({
         queryKey: ["books-owner", page, size],
         queryFn: () => BooksApi.findAllByOwner(page, size),
+        initialData: {
+            content: [],
+            number: 0,
+            size: 10,
+            total: 0,
+            totalPages: 0,
+            first: true,
+            last: true,
+        }
     });
 
 export const useBorrowedBooks = (page = 0, size = 10) =>
     useQuery<PageResponseBorrowedBookResponse>({
         queryKey: ["books-borrowed", page, size],
         queryFn: () => BooksApi.findAllBorrowed(page, size),
+        initialData: {
+            content: [],
+            number: 0,
+            size: 0,
+            total: 0,
+            totalPages: 0,
+            first: true,
+            last: false
+        }
     });
 
 export const useReturnedBooks = (page = 0, size = 10) =>
     useQuery<PageResponseBorrowedBookResponse>({
         queryKey: ["books-returned", page, size],
         queryFn: () => BooksApi.findAllReturned(page, size),
+
+        initialData: {
+            content: [],
+            number: 0,
+            size: 0,
+            total: 0,
+            totalPages: 0,
+            first: true,
+            last: false
+        }
+
     });
 
 export const useBookById = (bookID: number) =>
