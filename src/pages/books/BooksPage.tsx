@@ -1,12 +1,12 @@
 
 import { NavBar } from '@/components/nav-bar';
 import { BookCard } from '@/components/book-card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useBooks } from '@/api/hooks/useBooks';
 import { useState } from 'react';
+import Pagination from '@/components/pagination';
 
 
 
@@ -94,25 +94,7 @@ export default function BooksPage() {
                             </div>
 
                             {data.totalPages > 1 && (
-                                <div className="flex items-center justify-center gap-2 pt-4">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setPage(Math.max(0, page - 1))}
-                                        disabled={data.first}
-                                    >
-                                        Previous
-                                    </Button>
-                                    <span className="text-sm text-muted-foreground">
-                                        Page {data.number + 1} of {data.totalPages}
-                                    </span>
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setPage(Math.min(data.totalPages - 1, page + 1))}
-                                        disabled={data.number >= data.totalPages - 1}
-                                    >
-                                        Next
-                                    </Button>
-                                </div>
+                                <Pagination page={page} first={data.first} number={data.number} totalPages={data.totalPages} setPage={setPage} />
                             )}
                         </>
                     )}
