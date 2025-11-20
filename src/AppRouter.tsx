@@ -10,7 +10,6 @@ const RegisterPage = lazy(() => import("./pages/auth/RegisterPage"));
 
 const BooksPage = lazy(() => import("./pages/books/BooksPage"));
 const BookDetailsPage = lazy(() => import("./pages/books/BookDetailPage"));
-const BookFeedbackPage = lazy(() => import("./pages/books/BookFeedbackPage"));
 const BorrowedBooksPage = lazy(() => import("./pages/books/BookBorrowedPage"));
 const MyBooksPage = lazy(() => import("./pages/books/MyBooksPage"));
 const ReturnedBooksPage = lazy(() => import("./pages/books/BooksReturnedPage"));
@@ -72,16 +71,6 @@ export default function AppRouter() {
             </PrivateRoute>
           }
         />
-
-        <Route
-          path="/books/:id/feedback"
-          element={
-            <PrivateRoute>
-              <BookFeedbackPage />
-            </PrivateRoute>
-          }
-        />
-
         <Route
           path="/books/borrowed"
           element={
