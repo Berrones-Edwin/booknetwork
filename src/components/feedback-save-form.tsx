@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { useSaveFeedback } from "@/api/hooks/useFeedback";
 import type { FeedBackRequest } from "@/api/types/types";
-import { toast } from "sonner";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 type Inputs = {
@@ -18,7 +18,7 @@ type Inputs = {
 export default function FeedBackForm({ id }: { id: number }) {
 
 
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<Inputs>({
+    const { register, handleSubmit, setValue, watch, formState: { errors }, reset } = useForm<Inputs>({
         defaultValues: {
             rating: 0
         },
@@ -37,6 +37,7 @@ export default function FeedBackForm({ id }: { id: number }) {
         mutate(d, {
             onSuccess: () => {
                 toast.success("Feedback has been created")
+                reset()
 
             }, onError: (err) => {
                 toast.error("Something was wrong " + err)
@@ -50,6 +51,9 @@ export default function FeedBackForm({ id }: { id: number }) {
                 <CardTitle>Leave a Review</CardTitle>
             </CardHeader>
             <CardContent>
+
+                <Toaster />
+
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
                     <div className="space-y-2">

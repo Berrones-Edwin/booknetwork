@@ -3,10 +3,12 @@ import { NavBar } from '@/components/nav-bar';
 import { BookCard } from '@/components/book-card';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
-import { useBooks } from '@/api/hooks/useBooks';
+import { useNavigate } from 'react-router';
+import { useBooks, useBorrowBook } from '@/api/hooks/useBooks';
 import { useState } from 'react';
 import Pagination from '@/components/pagination';
+import ErrorAlert from '@/components/error-alert';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 
@@ -15,11 +17,20 @@ export default function BooksPage() {
     const [page, setPage] = useState(0)
     const { data, error, isPending } = useBooks(page, 10)
     const [searchQuery, setSearchQuery] = useState('');
+    const { mutate } = useBorrowBook();
 
 
-    const handleBorrow = async (id: number) => {
-        console.log({ id })
-        //TODO
+    const handleBorrow = async (id: number, title: string) => {
+
+        mutate(id, {
+            onSuccess: () => {
+                toast.success("You have borrowed the book " + title)
+
+            }, onError: (err) => {
+                toast.error("Error: " + err.cause?.error)
+
+            }
+        })
     };
 
     const handleViewFeedback = (id: number) => {
@@ -32,7 +43,15 @@ export default function BooksPage() {
     );
 
     if (error || data === undefined) {
-        <p>Error : {error?.message || "Error"}</p>
+
+        return (
+            <div className="min-h-screen bg-background">
+                <NavBar />
+                <div className="flex items-center justify-center py-20">
+                    <ErrorAlert />
+                </div>
+            </div>
+        );
     }
 
     if (isPending) {
@@ -49,6 +68,7 @@ export default function BooksPage() {
     return (
         <div className="min-h-screen bg-background">
             <NavBar />
+            <><Toaster /></>
 
             <main className="container mx-auto px-4 py-8">
                 <div className="space-y-6">
@@ -81,15 +101,15 @@ export default function BooksPage() {
                         <>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {filteredBooks.map((book) => (
-                                    <Link to={`/books/${book.id}`}>
-                                        <BookCard
-                                            key={book.id}
-                                            book={book}
-                                            onBorrow={handleBorrow}
-                                            onViewFeedback={handleViewFeedback}
-                                            isOwner={false}
-                                        />
-                                    </Link>
+
+                                    <BookCard
+                                        key={book.id}
+                                        book={book}
+                                        onBorrow={handleBorrow}
+                                        onViewFeedback={handleViewFeedback}
+                                        isOwner={false}
+                                    />
+
                                 ))}
                             </div>
 

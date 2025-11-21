@@ -10,7 +10,7 @@ interface BookCardProps {
   onEdit?: (book: BookResponse) => void;
   onArchive?: (id: number) => void;
   onShare?: (id: number) => void;
-  onBorrow?: (id: number) => void;
+  onBorrow?: (id: number, title: string) => void;
   onViewFeedback?: (id: number) => void;
   showActions?: boolean;
   isOwner?: boolean;
