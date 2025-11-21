@@ -13,7 +13,23 @@ export async function apiFetch<TResponse>(
     });
 
     if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        let errorMessage = "An unknow error has ocurred"
+        let errorInfo = {}
+        try {
+            errorInfo = await response.json()
+            errorMessage = errorInfo.message
+                || errorInfo.error
+                || errorInfo.detail
+                || JSON.stringify(errorInfo)
+        } catch (e) {
+            errorMessage = await response.text()
+        }
+        const error = Error(`API error: ${response.status}`);
+        error.message = "" + errorInfo
+        error.cause = errorInfo
+        console.log({ error })
+        throw error;
+
     }
 
     return response.json() as Promise<TResponse>;
