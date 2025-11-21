@@ -122,7 +122,7 @@ export function BookCard({
               {onBorrow && book.shareable && !book.archived && (
                 <Button
                   size="sm"
-                  onClick={() => book.id && onBorrow(book.id)}
+                  onClick={() => book.id && onBorrow(book.id, book.title)}
                   className="flex-1"
                 >
                   Borrow
