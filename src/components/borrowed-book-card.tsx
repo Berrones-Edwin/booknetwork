@@ -1,8 +1,9 @@
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { BookOpen, CheckCircle2, XCircle } from 'lucide-react';
-import type { BorrowedBookResponse } from '@/lib/types';
+import { BookOpen, CheckCircle2 } from 'lucide-react';
+import type { BorrowedBookResponse } from '@/api/types/types';
+
 
 interface BorrowedBookCardProps {
   book: BorrowedBookResponse;
@@ -26,13 +27,13 @@ export function BorrowedBookCard({
           <BookOpen className="h-16 w-16 text-muted-foreground/50" />
         </div>
       </div>
-      
+
       <CardContent className="p-4 space-y-2">
         <div className="space-y-1">
           <h3 className="font-semibold text-lg line-clamp-1">{book.title}</h3>
           <p className="text-sm text-muted-foreground">{book.authorName}</p>
         </div>
-        
+
         <div className="flex items-center gap-2 pt-2">
           {book.returned ? (
             book.returnApproved ? (
@@ -49,14 +50,14 @@ export function BorrowedBookCard({
             <Badge variant="secondary">Currently Borrowed</Badge>
           )}
         </div>
-        
+
         {book.isbn && (
           <p className="text-xs text-muted-foreground">
             ISBN: {book.isbn}
           </p>
         )}
       </CardContent>
-      
+
       <CardFooter className="p-4 pt-0 flex gap-2">
         {showReturnButton && !book.returned && onReturn && (
           <Button
@@ -67,7 +68,7 @@ export function BorrowedBookCard({
             Return Book
           </Button>
         )}
-        
+
         {showApproveButton && book.returned && !book.returnApproved && onApprove && (
           <Button
             size="sm"
