@@ -1,6 +1,3 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,37 +5,48 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
-import type { BookRequest, BookResponse } from '@/lib/types';
+import type { BookResponse } from '@/api/types/types';
+import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
+import { useSaveBook } from '@/api/hooks/useBooks';
+import toast, { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
 
 interface BookFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: BookRequest) => Promise<void>;
   book?: BookResponse | null;
 }
-
-export function BookFormDialog({ open, onOpenChange, onSubmit, book }: BookFormDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<BookRequest>({
-    title: '',
-    authorName: '',
-    isbn: '',
-    synopsis: '',
-    shareable: true,
-  });
-
+type Inputs = {
+  id?: number;
+  title: string;
+  authorName: string;
+  isbn: string;
+  synopsis: string;
+  shareable: boolean;
+}
+export function BookFormDialog({ open, onOpenChange, book }: BookFormDialogProps) {
+  const { control, register, handleSubmit, formState: { errors }, reset } = useForm<Inputs>({
+    defaultValues: {
+      title: "",
+      authorName: '',
+      isbn: '',
+      synopsis: '',
+      shareable: true
+    }
+  })
+  const { mutate, isPending } = useSaveBook()
   useEffect(() => {
     if (book) {
-      setFormData({
+      reset({
         id: book.id,
-        title: book.title || '',
-        authorName: book.authorName || '',
-        isbn: book.isbn || '',
-        synopsis: book.synopsis || '',
-        shareable: book.shareable ?? true,
+        title: book.title,
+        authorName: book.authorName,
+        isbn: book.isbn,
+        synopsis: book.synopsis,
+        shareable: book.shareable,
       });
     } else {
-      setFormData({
+      reset({
         title: '',
         authorName: '',
         isbn: '',
@@ -46,110 +54,166 @@ export function BookFormDialog({ open, onOpenChange, onSubmit, book }: BookFormD
         shareable: true,
       });
     }
-  }, [book, open]);
+  }, [book, open, reset]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      await onSubmit(formData);
-      onOpenChange(false);
+
+      // console.log({ data })
+      // return
+
+      mutate(data, {
+        onSuccess: () => {
+
+          if (!data?.id) {
+            toast.success("book has been created")
+          } else {
+            toast.success("book has been edited")
+          }
+        }, onError: (err) => {
+          const errorPayload = (err as any).cause || {};
+          let message = err.message || "An unknown error has occurred";
+
+          if (errorPayload && errorPayload.validationErrors) {
+            // Mapear los códigos de error 100-103 a mensajes legibles
+            const errorMap: { [key: string]: string } = {
+              "100": "Title is required.",
+              "101": "Author Name is required.",
+              "102": "ISBN is required.",
+              "103": "Synopsis is required."
+            };
+
+            const clientMessages = errorPayload.validationErrors
+              .map((code: string) => errorMap[code] || `Validation Error Code: ${code}`)
+              .join('\n');
+
+            message = clientMessages;
+          }
+
+          toast.error(message);
+
+        }
+      })
+
     } catch (error) {
-      console.error('[v0] Error submitting book form:', error);
+      console.error('Error submitting book form:', error);
     } finally {
-      setIsLoading(false);
+      onOpenChange(false);
+      reset()
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>{book ? 'Edit Book' : 'Add New Book'}</DialogTitle>
-          <DialogDescription>
-            {book ? 'Update the details of your book' : 'Add a new book to your collection'}
-          </DialogDescription>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-                disabled={isLoading}
-              />
-            </div>
+    <>
+      <Toaster />
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>{book ? 'Edit Book' : 'Add New Book'}</DialogTitle>
+            <DialogDescription>
+              {book ? 'Update the details of your book' : 'Add a new book to your collection'}
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="space-y-2">
-              <Label htmlFor="authorName">Author *</Label>
-              <Input
-                id="authorName"
-                value={formData.authorName}
-                onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="isbn">ISBN *</Label>
-              <Input
-                id="isbn"
-                value={formData.isbn}
-                onChange={(e) => setFormData({ ...formData, isbn: e.target.value })}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="synopsis">Synopsis</Label>
-              <Textarea
-                id="synopsis"
-                value={formData.synopsis}
-                onChange={(e) => setFormData({ ...formData, synopsis: e.target.value })}
-                disabled={isLoading}
-                rows={4}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label htmlFor="shareable">Shareable</Label>
-                <p className="text-sm text-muted-foreground">
-                  Allow others to borrow this book
-                </p>
+          <form onSubmit={handleSubmit(onSubmit)} >
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Title *</Label>
+                <Input
+                  id="title"
+                  required
+                  disabled={isPending}
+                  {...register("title")}
+                />
               </div>
-              <Switch
-                id="shareable"
-                checked={formData.shareable}
-                onCheckedChange={(checked) => setFormData({ ...formData, shareable: checked })}
-                disabled={isLoading}
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                book ? 'Update Book' : 'Add Book'
+              {errors.title && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  Title is required
+                </div>
               )}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+
+              <div className="space-y-2">
+                <Label htmlFor="authorName">Author *</Label>
+                <Input
+                  id="authorName"
+                  required
+                  disabled={isPending}
+                  {...register("authorName")}
+
+                />
+              </div>
+              {errors.authorName && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  Author Name is required
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="isbn">ISBN *</Label>
+                <Input
+                  id="isbn"
+                  required
+                  {...register("isbn")}
+                  disabled={isPending}
+                />
+              </div>
+              {errors.isbn && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  Isbn is required
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="synopsis">Synopsis</Label>
+                <Textarea
+                  id="synopsis"
+                  disabled={isPending}
+                  rows={4}
+                  {...register("synopsis")}
+                />
+              </div>
+              {errors.synopsis && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  Synopsis is required
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="shareable">Shareable</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Allow others to borrow this book
+                  </p>
+                </div>
+                <Controller name="shareable" control={control} render={({ field }) => (
+                  <Switch
+                    id="shareable"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    disabled={isPending}
+                  />
+                )} />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isPending}>
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  book ? 'Update Book' : 'Add Book'
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
