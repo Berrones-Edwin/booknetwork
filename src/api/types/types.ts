@@ -46,7 +46,7 @@ export interface PageResponseFeedBackResponse {
 // Book
 // ===========================
 export interface BookRequest {
-    id: number;
+    id?: number;
     title: string;
     authorName: string;
     isbn: string;
