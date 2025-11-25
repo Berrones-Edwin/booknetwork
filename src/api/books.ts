@@ -3,8 +3,6 @@ import type { BookRequest, BookResponse, PageResponseBookResponse, PageResponseB
 import { getToken } from "./utils/token";
 
 const token = getToken();
-console.log(token)
-
 export const BooksApi = {
     findAll: (page = 0, size = 10) =>
         apiFetch<PageResponseBookResponse>(`/books?page=${page}&size=${size}`, {
