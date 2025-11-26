@@ -5,15 +5,18 @@ import { BookFormDialog } from '@/components/book-form-dialog';
 import { Button } from '@/components/ui/button';
 import { Plus, Loader2 } from 'lucide-react';
 import type { BookResponse } from '@/api/types/types';
-import { useBooksByOwner } from '@/api/hooks/useBooks';
+import { useBooksByOwner, useUpdateArchived, useUpdateShareable } from '@/api/hooks/useBooks';
 import ErrorAlert from '@/components/error-alert';
 import Pagination from '@/components/pagination';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function MyBooksPage() {
     const [page, setPage] = useState(0);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingBook, setEditingBook] = useState<BookResponse | null>(null);
     const { data: books, isPending, error } = useBooksByOwner(page, 10)
+    const { mutateAsync: mutateAsyncArchived } = useUpdateArchived()
+    const { mutateAsync: mutateAsyncShareable } = useUpdateShareable()
 
 
     const handleEdit = (book: BookResponse) => {
@@ -22,21 +25,31 @@ export default function MyBooksPage() {
     };
 
     const handleArchive = async (id: number) => {
-        // try {
-        //   await bookApi.updateArchivedStatus(id);
-        //   loadBooks();
-        // } catch (error) {
-        //   console.error('[v0] Error archiving book:', error);
-        // }
+
+        mutateAsyncArchived(id, {
+            onSuccess: () => {
+                toast.success("You have archived the book ")
+
+            }, onError: (err) => {
+                toast.error("Error: " + err.cause?.error)
+
+            }
+        })
+
     };
 
     const handleShare = async (id: number) => {
-        // try {
-        //   await bookApi.updateShareableStatus(id);
-        //   loadBooks();
-        // } catch (error) {
-        //   console.error('[v0] Error updating shareable status:', error);
-        // }
+
+        mutateAsyncShareable(id, {
+            onSuccess: () => {
+                toast.success("The book " + id + " is shareable with everyone!")
+
+            }, onError: (err) => {
+                toast.error("Error: " + err.cause?.error)
+
+            }
+        })
+
     };
     if (error || books === undefined) {
 
@@ -64,6 +77,7 @@ export default function MyBooksPage() {
     return (
         <div className="min-h-screen bg-background">
             <NavBar />
+            <Toaster />
 
             <main className="container mx-auto px-4 py-8">
                 <div className="space-y-6">
