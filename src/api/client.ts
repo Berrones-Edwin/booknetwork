@@ -14,7 +14,9 @@ export async function apiFetch<TResponse>(
 
     if (!response.ok) {
         let errorMessage = "An unknow error has ocurred"
-        let errorInfo = {}
+        let errorInfo: { message?: string, error?: string, detail?: string } = {
+
+        }
         try {
             errorInfo = await response.json()
             errorMessage = errorInfo.message

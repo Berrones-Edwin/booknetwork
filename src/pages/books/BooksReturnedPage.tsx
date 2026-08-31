@@ -10,7 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function BooksReturnedPage() {
 
-    const [page, setPage] = useState(0)
+    const [page] = useState(0)
     const { data: books, isPending, error } = useReturnedBooks(page, 10)
     const { mutate } = useApproveReturnBook()
 

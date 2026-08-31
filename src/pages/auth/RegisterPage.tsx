@@ -22,7 +22,7 @@ export default function RegisterPage() {
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         mutate(data, {
-            onSuccess: (res) => {
+            onSuccess: (res: { ok?: string }) => {
                 if (res?.ok === "true") {
                     router("/login")
                 }

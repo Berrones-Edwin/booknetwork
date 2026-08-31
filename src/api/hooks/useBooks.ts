@@ -100,7 +100,7 @@ export const useUpdateShareable = () => {
 
 export const useUpdateArchived = () => {
     const queryClient = useQueryClient();
-    return useMutation<number, Error, number>({
+    return useMutation<number, ApiError, number>({
         mutationFn: (bookId) => BooksApi.updateArchived(bookId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["books"] });
@@ -111,7 +111,7 @@ export const useUpdateArchived = () => {
 
 export const useBorrowBook = () => {
     const queryClient = useQueryClient();
-    return useMutation<number, Error, number>({
+    return useMutation<number, ApiError, number>({
         mutationFn: (bookId) => BooksApi.borrow(bookId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["books"] });
@@ -120,9 +120,14 @@ export const useBorrowBook = () => {
     });
 };
 
+interface ApiError extends Error {
+  cause?: {
+    error: string;
+  };
+}
 export const useReturnBook = () => {
     const queryClient = useQueryClient();
-    return useMutation<number, Error, number>({
+    return useMutation<number, ApiError, number>({
         mutationFn: (bookId) => BooksApi.returnBorrow(bookId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["books-borrowed"] });
@@ -133,7 +138,7 @@ export const useReturnBook = () => {
 
 export const useApproveReturnBook = () => {
     const queryClient = useQueryClient();
-    return useMutation<number, Error, number>({
+    return useMutation<number, ApiError, number>({
         mutationFn: (bookId) => BooksApi.approveReturn(bookId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["books-borrowed"] });
