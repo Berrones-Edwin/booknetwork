@@ -20,7 +20,7 @@ export default function BooksReturnedPage() {
     const handleApprove = async (id: number) => {
         mutate(id, {
             onSuccess: () => {
-                toast.success("You have borrowed the book " + title)
+                toast.success("You have borrowed the book ")
 
             }, onError: (err) => {
                 toast.error("Error: " + err.cause?.error)

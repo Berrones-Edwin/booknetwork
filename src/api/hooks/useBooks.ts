@@ -92,7 +92,7 @@ export const useSaveBook = () => {
 
 export const useUpdateShareable = () => {
     const queryClient = useQueryClient();
-    return useMutation<number, Error, number>({
+    return useMutation<number, ApiError, number>({
         mutationFn: (bookId) => BooksApi.updateShareable(bookId),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["books"] }),
     });
