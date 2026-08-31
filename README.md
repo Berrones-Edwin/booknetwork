@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+# BookNetwork
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BookNetwork manageyour book collection, share with your firends and discover new reads.
 
-Currently, two official plugins are available:
+## Technologies | Tecnologías
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- Tailwind
+- Vite
+- TanStack Query
 
-## React Compiler
+## Backend
+ 
+You can find the [backend](https://github.com/Berrones-Edwin/booknetwork-backend)
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+## Demo
 
-## Expanding the ESLint configuration
+If you want to see the demo of this proyect deployed, you can visit [Demo of the proyect](https://booknetwork-1v4mxnkln-berronesedwins-projects.vercel.app/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Si tu quieres puedes ver el demo del proyecto ya desplegado, visitame [Demo of the proyect](https://booknetwork-1v4mxnkln-berronesedwins-projects.vercel.app/)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Installation | Instalación
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+To install and run this proyect just type and execute <br>
+Para instalar y ejecutar el proyecto
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone (https://github.com/Berrones-Edwin/booknetwork.git)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+```bash
+npm run dev
+```
+
+## Preview
+
+![](https://private-user-images.githubusercontent.com/44040730/643688707-e361a4f3-fc03-4cf3-b167-4beb3a773f6a.jpeg?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3ODgxOTc5NzUsIm5iZiI6MTc4ODE5NzY3NSwicGF0aCI6Ii80NDA0MDczMC82NDM2ODg3MDctZTM2MWE0ZjMtZmMwMy00Y2YzLWIxNjctNGJlYjNhNzczZjZhLmpwZWc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjYwODMxJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI2MDgzMVQxNzM0MzVaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04ZjA3YTMyOTY4OWRlZDAzZDZkNmVjNWEzYmMxY2NmNWRlNDQzZDNhY2VkYWM2MmU3OThkODMwZmQwMGU2NDdlJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZyZXNwb25zZS1jb250ZW50LXR5cGU9aW1hZ2UlMkZqcGVnIn0.8a-vgUyLbtX9ZHDRmU7fEMhpar7wTfnE0doLeeGgzr8)
