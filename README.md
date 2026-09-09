@@ -1,6 +1,22 @@
 # BookNetwork
 
-BookNetwork manageyour book collection, share with your firends and discover new reads.
+BookNetwork is a Single Page Application (SPA) built using React, TypeScript, Vite, Tailwind CSS, and TanStack Query. The application functions as a book-focused social network connected to a standalone backend via a REST API.
+
+The system includes:
+
+- User registration and login with token-based authentication.
+- Public and private routes protected based on authentication status.
+- Browsing of books available within the community.
+- Search functionality by title or author.
+- Personal library management.
+- Book creation and editing.
+- Management of book availability, archiving, and visibility.
+- Loan requests and management.
+- Tracking of loaned and returned books.
+- Owner approval of returns.
+- Star ratings and comments.
+- Pagination for books, loans, and feedback.
+- Visual states for loading, errors, and action notifications.
 
 ## Technologies | Tecnologías
 
